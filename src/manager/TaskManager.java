@@ -7,7 +7,6 @@ import model.Task;
 
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Интерфейс менеджера задач.
@@ -65,18 +64,21 @@ public interface TaskManager<T extends Task> {
 
     /**
      * Создание. Задачи Сам объект должен передаваться в качестве параметра.
+     * @return
      */
-    void addTask(Task task);
+    Object addTask(Task task);
 
     /**
      * Создание. Подзадачи Сам объект должен передаваться в качестве параметра.
+     * @return
      */
-    void addSubTask(SubTask subTask);
+    Object addSubTask(SubTask subTask);
 
     /**
      * Создание. Эпика Сам объект должен передаваться в качестве параметра.
+     * @return
      */
-    void addEpic(Epic epic);
+    Object addEpic(Epic epic);
 
     /**
      * Обновление Задачи.
@@ -104,7 +106,7 @@ public interface TaskManager<T extends Task> {
     /**
      * Удаление по идентификатору подзадачи
      */
-    void removeSubTask(int id) throws ManagerSaveException;
+    void removeSubTask(int id);
 
     /**
      * Удаление по идентификатору эпика

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;
+import java.io.IOException;
 
 class FileBackedTasksManagerTest extends ManagerTest<FileBackedTasksManager> {
     @BeforeEach
@@ -17,7 +18,7 @@ class FileBackedTasksManagerTest extends ManagerTest<FileBackedTasksManager> {
     }
 
     @Test
-    void saveToFileAndLoadFromFile() {
+    void saveToFileAndLoadFromFile() throws IOException, InterruptedException {
         super.init();
         File tasksDB = new File("task.csv");
         Task taskT = manager.getTask(1);

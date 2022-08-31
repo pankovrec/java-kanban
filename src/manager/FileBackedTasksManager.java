@@ -174,7 +174,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public ArrayList<Task> getAllTasks() {
-        save();
+                save();
         return super.getAllTasks();
     }
 
@@ -185,7 +185,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getAllSubTasks() {
+    public ArrayList<SubTask> getAllSubTasks(){
         save();
         return super.getAllSubTasks();
     }
@@ -215,21 +215,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task task) {
+    public Object addTask(Task task) {
         super.addTask(task);
         save();
+        return task.getId();
     }
 
     @Override
-    public void addSubTask(SubTask subTask) {
+    public Object addSubTask(SubTask subTask)  {
         super.addSubTask(subTask);
         save();
+        return subTask.getId();
     }
 
     @Override
-    public void addEpic(Epic epic) {
+    public Object addEpic(Epic epic) {
         super.addEpic(epic);
         save();
+        return epic.getId();
     }
 
     @Override
@@ -251,19 +254,19 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeTask(int id) {
+    public void removeTask(int id)  {
         super.removeTask(id);
         save();
     }
 
     @Override
-    public void removeSubTask(int id) {
+    public void removeSubTask(int id)  {
         super.removeSubTask(id);
         save();
     }
 
     @Override
-    public void removeEpic(int id) {
+    public void removeEpic(int id)  {
         super.removeEpic(id);
         save();
     }
@@ -275,7 +278,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     //  Для тестов
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         TaskManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File("task.csv"));
 
         fileBackedTasksManager.getHistory().forEach(System.out::println); //пробуем востановить задачи из истории

@@ -1,6 +1,5 @@
 package manager;
 
-import exceptions.ManagerSaveException;
 import model.Epic;
 import model.Status;
 import model.SubTask;
@@ -98,15 +97,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addTask(Task task) {
+    public Object addTask(Task task) {
         task.setId(++id);
         findCrossTimeIntersection(task);
         tasks.put(task.getId(), task);
         prioritizedTasks.addAll(tasks.values());
+        return null;
     }
 
     @Override
-    public void addSubTask(SubTask subTask) {
+    public Object addSubTask(SubTask subTask) {
         try {
             subTask.setId(++id);
             findCrossTimeIntersection(subTask);
@@ -119,6 +119,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         prioritizedTasks.addAll(subTasks.values());
 
+        return null;
     }
 
 
@@ -142,10 +143,11 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public void addEpic(Epic epic) {
+    public Object addEpic(Epic epic) {
         epic.setId(++id);
         epics.put(epic.getId(), epic);
         epicStatusChanger(epic);
+        return null;
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -29,10 +30,15 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     void initFileBackedManager() {
+       // Managers.getDefault();
+        Managers.getFileBackedTasksManager();
+    }
+
+    void initHttpTaskManager() throws IOException, InterruptedException {
         Managers.getDefault();
     }
 
-    void init() {
+    void init() throws IOException, InterruptedException {
 
         task = new Task(0, "Задача 1", "Описание задачи 1", Status.NEW,
                 LocalDateTime.of(2022, 8, 6, 11, 50), 15);
@@ -45,7 +51,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllTasks() {
+    void getAllTasks() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         final List<Task> taskList = manager.getAllTasks();
@@ -55,7 +61,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllTasksIfTasksIsEmpty() {
+    void getAllTasksIfTasksIsEmpty() throws IOException, InterruptedException {
         initInMemoryManager();
         final List<Task> taskList = manager.getAllTasks();
         assertNotNull(" ");
@@ -64,7 +70,7 @@ abstract class ManagerTest<T extends TaskManager> {
 
 
     @Test
-    void getAllEpics() {
+    void getAllEpics() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         final List<Epic> epicList = manager.getAllEpics();
@@ -74,7 +80,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllEpicsIfEpicsIsEmpty() {
+    void getAllEpicsIfEpicsIsEmpty() throws IOException, InterruptedException {
         initInMemoryManager();
         final List<Epic> epicList = manager.getAllEpics();
         assertNotNull(" ");
@@ -82,7 +88,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllSubTasks() {
+    void getAllSubTasks() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         final List<SubTask> subTaskList = manager.getAllSubTasks();
@@ -92,7 +98,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllSubTasksIfSubTasksIsEmpty() {
+    void getAllSubTasksIfSubTasksIsEmpty() throws IOException, InterruptedException {
         initInMemoryManager();
         final List<SubTask> subTaskList = manager.getAllSubTasks();
         assertNotNull(" ");
@@ -100,7 +106,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getSubTasksByEpic() {
+    void getSubTasksByEpic() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         final List<SubTask> subTaskByEpicList = manager.getSubTasksByEpic(epic.getId());
@@ -110,13 +116,13 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getSubTasksByEpicIfEpicEmpty() {
+    void getSubTasksByEpicIfEpicEmpty() throws IOException, InterruptedException {
         initInMemoryManager();
         assertEquals(0, manager.getSubTasksByEpic(1).size());
     }
 
     @Test
-    void getTask() {
+    void getTask() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
 
@@ -138,7 +144,7 @@ abstract class ManagerTest<T extends TaskManager> {
                 IllegalArgumentException.class,
                 new Executable() {
                     @Override
-                    public void execute() {
+                    public void execute() throws IOException, InterruptedException {
                         manager.getTask(100);
                     }
                 });
@@ -146,7 +152,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getSubTask() {
+    void getSubTask() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         manager.getSubTask(subTask.getId());
@@ -162,7 +168,7 @@ abstract class ManagerTest<T extends TaskManager> {
 
 
     @Test
-    void getEpic() {
+    void getEpic() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         manager.getEpic(epic.getId());
@@ -178,7 +184,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addTaskWithoutIntersection() {
+    void addTaskWithoutIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         initFileBackedManager();
         init();
@@ -193,7 +199,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void findTaskIntersection() {
+    void findTaskIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         System.out.println(manager.getAllTasks());
@@ -205,7 +211,7 @@ abstract class ManagerTest<T extends TaskManager> {
                 IllegalArgumentException.class,
                 new Executable() {
                     @Override
-                    public void execute() {
+                    public void execute() throws IOException, InterruptedException {
                         manager.addTask(task1);
                     }
                 });
@@ -214,7 +220,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void findSubTaskAndTaskIntersection() {
+    void findSubTaskAndTaskIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         subTask1 = new SubTask(0, "st1", "dsc1", Status.NEW, 2,
@@ -223,7 +229,7 @@ abstract class ManagerTest<T extends TaskManager> {
                 IllegalArgumentException.class,
                 new Executable() {
                     @Override
-                    public void execute() {
+                    public void execute() throws IOException, InterruptedException {
                         manager.addSubTask(subTask1);
                     }
                 });
@@ -231,7 +237,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addEpic() {
+    void addEpic() throws IOException, InterruptedException {
         initInMemoryManager();
         epic = new Epic(0, "addepictest", "descriptionepic", Status.IN_PROGRESS);
         manager.addEpic(epic);
@@ -241,7 +247,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addSubTaskWithoutIntersection() {
+    void addSubTaskWithoutIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         subTask = new SubTask(0, "addsubtasktest", "descriptionstask", Status.DONE, 2,
@@ -255,7 +261,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addSubTaskWithIntersection() {
+    void addSubTaskWithIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         System.out.println(manager.getAllSubTasks());
@@ -265,7 +271,7 @@ abstract class ManagerTest<T extends TaskManager> {
                 IllegalArgumentException.class,
                 new Executable() {
                     @Override
-                    public void execute() {
+                    public void execute() throws IOException, InterruptedException {
                         manager.addTask(subTask1);
                     }
                 });
@@ -273,7 +279,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateTaskWithoutIntersection() {
+    void updateTaskWithoutIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         task = new Task(0, "updateTaskTest", "oldDescriptionUpdateTaskTest", Status.IN_PROGRESS,
@@ -290,7 +296,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateTaskWithIntersection() {
+    void updateTaskWithIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         task = new Task(0, "updateTaskTest", "oldDescriptionUpdateTaskTest", Status.IN_PROGRESS,
@@ -302,7 +308,7 @@ abstract class ManagerTest<T extends TaskManager> {
                 IllegalArgumentException.class,
                 new Executable() {
                     @Override
-                    public void execute() {
+                    public void execute() throws IOException, InterruptedException {
                         manager.updateTask(task);
                     }
                 });
@@ -311,7 +317,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateEpic() {
+    void updateEpic() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         epic = new Epic(2, "updateEpicTestNEW", "DescriptionUpdateEpicTestNEW", Status.IN_PROGRESS);
@@ -323,7 +329,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateSubTaskWithoutIntersection() {
+    void updateSubTaskWithoutIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         assertEquals(10, subTask.getDuration());
@@ -339,7 +345,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateSubTaskWithIntersection() {
+    void updateSubTaskWithIntersection() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         System.out.println(manager.getAllSubTasks());
@@ -350,7 +356,7 @@ abstract class ManagerTest<T extends TaskManager> {
                 IllegalArgumentException.class,
                 new Executable() {
                     @Override
-                    public void execute() {
+                    public void execute() throws IOException, InterruptedException {
                         manager.updateSubTask(subTask1);
                     }
                 });
@@ -358,7 +364,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeTask() {
+    void removeTask() throws IOException, InterruptedException {
         initInMemoryManager();
         initFileBackedManager();
         init();
@@ -377,7 +383,7 @@ abstract class ManagerTest<T extends TaskManager> {
 
 
     @Test
-    void removeSubTask() {
+    void removeSubTask() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         manager.removeSubTask(subTask.getId());
@@ -393,7 +399,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeEpic() {
+    void removeEpic() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         manager.removeEpic(epic.getId());
@@ -408,7 +414,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getHistory() {
+    void getHistory() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         manager.getEpic(epic.getId());
@@ -431,7 +437,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void checkDuplicatesInHistory() {
+    void checkDuplicatesInHistory() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         manager.getEpic(epic.getId());
@@ -456,7 +462,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void DeleteElementFromHistoryCheckCustomLinkedList() {
+    void DeleteElementFromHistoryCheckCustomLinkedList() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         manager.getEpic(epic.getId());
@@ -478,7 +484,7 @@ abstract class ManagerTest<T extends TaskManager> {
 
 
     @Test
-    void getHistoryIfHistoryNotExist() {
+    void getHistoryIfHistoryNotExist() throws IOException, InterruptedException {
         initInMemoryManager();
         List<Task> testHistory = manager.getHistory();
 
@@ -486,7 +492,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void epicWithEmptySubtasks() {
+    void epicWithEmptySubtasks() throws IOException, InterruptedException {
         initInMemoryManager();
         epic = new Epic(0, "e1", "descE1", Status.DONE);
         manager.addEpic(epic);
@@ -495,7 +501,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void epicWithNewSubtasks() {
+    void epicWithNewSubtasks() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         epic = new Epic(0, "e1", "descE1", Status.IN_PROGRESS);
@@ -508,7 +514,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void epicWithInProgressNewSubtasks() {
+    void epicWithInProgressNewSubtasks() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         epic = new Epic(0, "e1", "descE1", Status.NEW);
@@ -520,7 +526,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void epicWithDoneSubtasks() {
+    void epicWithDoneSubtasks() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         epic = new Epic(0, "e1", "descE1", Status.NEW);
@@ -532,7 +538,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void epicWithNewAndDoneSubtasks() {
+    void epicWithNewAndDoneSubtasks() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         subTask = new SubTask(0, "stask1", "descrSt1", Status.NEW, 2,
@@ -543,7 +549,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void calculateEpicStartTime() {
+    void calculateEpicStartTime() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         subTask1 = new SubTask(0, "stask1", "descrST1", Status.DONE, 2,
@@ -553,7 +559,7 @@ abstract class ManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void calculateEpicDuration() {
+    void calculateEpicDuration() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         subTask1 = new SubTask(0, "stask1", "descrST1", Status.DONE, 2,
@@ -567,7 +573,7 @@ abstract class ManagerTest<T extends TaskManager> {
 
 
     @Test
-    void getPrioritizedTasks() {
+    void getPrioritizedTasks() throws IOException, InterruptedException {
         initInMemoryManager();
         init();
         subTask1 = new SubTask(0, "stask1", "descrST1", Status.DONE, 2,

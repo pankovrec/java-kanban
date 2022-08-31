@@ -1,23 +1,25 @@
-import manager.TaskManager;
-import manager.Managers;
+import manager.*;
 import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
-/**
- * Main класс программы.
- * В нем будем тестировать =)
- */
+//
+///**
+// * Main класс программы.
+// * В нем будем тестировать =)
+// */
 public class Main {
 
-    public static void main(String[] args) {
-        TaskManager taskManager = Managers.getDefault();
+    public static void main(String[] args) throws IOException {
+        KVServer kvServer = new KVServer();
+        kvServer.start();
+        FileBackedTasksManager taskManager = new HTTPTaskManager();
+        HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
 
-        // Заполняем данными программу.
-        // создаем 2 задачи, эпик с тремя подзадачами, эпик без подзадач.
         Task task1 = new Task(0, "Задача 1", "Описание задачи 1", Status.NEW, LocalDateTime.of(2022, 8, 8, 19, 00), 10);
         Task task2 = new Task(0, "Задача 2", "Описание задачи 2", Status.NEW, LocalDateTime.of(2022, 8, 8, 19, 11), 10);
         Epic epic1 = new Epic(0, "Эпик 1", "Эпик 1", Status.NEW);
@@ -33,13 +35,8 @@ public class Main {
         taskManager.addSubTask(subTask1);
         taskManager.addSubTask(subTask2);
         taskManager.addSubTask(subTask3);
-        System.out.println("Тестовый вывод.");
-        System.out.println(taskManager.getSubTask(subTask1.getId()));
-        System.out.println(taskManager.getSubTask(subTask2.getId()));
-        System.out.println(taskManager.getSubTask(subTask3.getId()));
-        System.out.println(taskManager.getEpic(epic1.getId()));
-        System.out.println("history" + taskManager.getHistory());
-        System.out.println(taskManager.getPrioritizedTasks());
+
+        httpTaskServer.start();
 
     }
 }

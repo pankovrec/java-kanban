@@ -3,6 +3,8 @@ package manager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
@@ -13,7 +15,7 @@ class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    void testInMemoryTaskManager() {
+    void testInMemoryTaskManager() throws IOException, InterruptedException {
         manager = new InMemoryTaskManager();
 
         assertEquals(0, manager.getAllTasks().size(), "Задач нет");
@@ -24,7 +26,7 @@ class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
 
 
     @Test
-    void testFileBackedTasksManager() {
+    void testFileBackedTasksManager() throws IOException, InterruptedException {
         manager = new FileBackedTasksManager();
         assertEquals(0, manager.getAllTasks().size(), "Задач нет");
         assertEquals(0, manager.getAllEpics().size(), "Эпиков нет");
