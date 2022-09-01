@@ -17,9 +17,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
         KVServer kvServer = new KVServer();
         kvServer.start();
-        FileBackedTasksManager taskManager = new HTTPTaskManager();
-        HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
+        HTTPTaskManager taskManager = new HTTPTaskManager();
 
+        HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
+        taskManager.load();
         Task task1 = new Task(0, "Задача 1", "Описание задачи 1", Status.NEW, LocalDateTime.of(2022, 8, 8, 19, 00), 10);
         Task task2 = new Task(0, "Задача 2", "Описание задачи 2", Status.NEW, LocalDateTime.of(2022, 8, 8, 19, 11), 10);
         Epic epic1 = new Epic(0, "Эпик 1", "Эпик 1", Status.NEW);
@@ -29,7 +30,6 @@ public class Main {
         SubTask subTask3 = new SubTask(0, "подзадача 3", "Описание 3 подзадачи", Status.DONE, 3, LocalDateTime.of(2022, 8, 4, 20, 00), 10);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
-
         taskManager.addEpic(epic1);
         taskManager.addEpic(epic2);
         taskManager.addSubTask(subTask1);
@@ -37,6 +37,5 @@ public class Main {
         taskManager.addSubTask(subTask3);
 
         httpTaskServer.start();
-
     }
 }

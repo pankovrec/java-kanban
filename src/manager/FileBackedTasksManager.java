@@ -127,7 +127,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     // Метод для загрузки из файла
-    private void load() {
+     void load() {
         int maxId = 0;
         try (final BufferedReader reader = new BufferedReader(new FileReader(file, UTF_8))) {
             reader.readLine();

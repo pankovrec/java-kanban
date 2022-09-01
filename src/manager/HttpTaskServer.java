@@ -30,15 +30,15 @@ import java.util.List;
  */
 
 public class HttpTaskServer {
-    private static final int PORT = 8080;
-    FileBackedTasksManager taskManager;
-    HttpServer httpServer;
-    Gson gson = new GsonBuilder()
+    private final int PORT = 8080;
+    private final HTTPTaskManager taskManager;
+    private HttpServer httpServer;
+    private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
 
-    public HttpTaskServer(FileBackedTasksManager taskManager) {
+    public HttpTaskServer(HTTPTaskManager taskManager) {
         this.taskManager = taskManager;
         try {
             this.httpServer = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
@@ -50,12 +50,8 @@ public class HttpTaskServer {
 
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Ошибка!");
+            throw new RuntimeException(e);
         }
-    }
-
-    public void setTasksManager(FileBackedTasksManager tasksManager) {
-        this.taskManager = tasksManager;
     }
 
     public class HistoryHandler implements HttpHandler {
@@ -96,9 +92,7 @@ public class HttpTaskServer {
             String method = httpExchange.getRequestMethod();
 
             if (method.equals("GET")) {
-                response = gson.toJson(taskManager.getAllTasks()) + "\n"
-                        + gson.toJson(taskManager.getAllEpics()) + "\n"
-                        + gson.toJson(taskManager.getAllSubTasks());
+                response = gson.toJson(taskManager.getPrioritizedTasks());
                 responseCode = 200;
             } else {
                 System.out.println("Нет возможности обработать такой метод для /tasks");
@@ -332,7 +326,6 @@ public class HttpTaskServer {
         return 404;
     }
 
-
     private Integer extractIdFromQuery(String query) {
         String[] split = query.split("=");
         return Integer.parseInt(split[1]);
@@ -346,5 +339,4 @@ public class HttpTaskServer {
     public void stop() {
         httpServer.stop(0);
     }
-
 }

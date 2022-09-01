@@ -20,11 +20,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HTTPTaskManagerTest {
-    static KVServer kvServer;
-    FileBackedTasksManager httpTaskManager;
-    HttpTaskServer httpTaskServer;
-    Gson gson = new GsonBuilder()
+public class HTTPTaskManagerTest extends ManagerTest<HTTPTaskManager> {
+    private static KVServer kvServer;
+    private HTTPTaskManager httpTaskManager;
+    private HttpTaskServer httpTaskServer;
+    private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
@@ -348,7 +348,6 @@ public class HTTPTaskManagerTest {
             if (i == 0) {
                 assertEquals("Subtask", testHistory.get(i).getName());
                 assertEquals("Desc Subtask", testHistory.get(i).getDescription());
-
             } else if (i == 1) {
                 assertEquals("task", testHistory.get(i).getName());
                 assertEquals("Desc task", testHistory.get(i).getDescription());
@@ -358,5 +357,4 @@ public class HTTPTaskManagerTest {
             }
         }
     }
-
 }

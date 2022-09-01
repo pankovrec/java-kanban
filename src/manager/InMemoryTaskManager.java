@@ -69,12 +69,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) {
         if (tasks.containsKey(id)) {
-
-
             final Task task = tasks.get(id);
             inMemoryHistoryManager.add(task);
             return task;
-
         } else throw new IllegalArgumentException("Такой задачи нет");
     }
 

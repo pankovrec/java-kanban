@@ -30,8 +30,11 @@ public class KVClient {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             responseString = response.body();
+            if (response.statusCode() == 200) {
+                System.out.println("ok");
+            }
         } catch (IOException | InterruptedException e) {
-            System.out.println("Ошибка запроса по адресу: '" + register);
+            throw new RuntimeException(e);
         }
         return responseString;
     }
@@ -44,14 +47,17 @@ public class KVClient {
                 .POST(HttpRequest.BodyPublishers.ofString(json)).build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                System.out.println("ok");
+            }
         } catch (IOException | InterruptedException e) {
-            System.out.println("Ошибка сохранения: " + save);
+            throw new RuntimeException(e);
         }
     }
 
     public String load(String key) {
         String responseString = "";
-        URI load = URI.create("http://localhost:8080/" + "load/" + key + "/?API_KEY=" + apiKey);
+        URI load = URI.create(this.url + "load/" + key + "/?API_KEY=" + apiKey);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(load)
                 .GET()
@@ -59,8 +65,11 @@ public class KVClient {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             responseString = response.body();
+            if (response.statusCode() == 200) {
+                System.out.println("ok");
+            }
         } catch (IOException | InterruptedException e) {
-            System.out.println("Ошибка загрузки: " + load);
+            throw new RuntimeException(e);
         }
         return responseString;
     }
